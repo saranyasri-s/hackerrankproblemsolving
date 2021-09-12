@@ -22,7 +22,6 @@ function passwordCracker(passwords, loginAttempt) {
     }
   }
 
-  let k = smallest;
   function checkIndex(str) {
     if (passwords.indexOf(str) !== -1) {
       return true;
@@ -35,11 +34,14 @@ function passwordCracker(passwords, loginAttempt) {
   for (let letter of loginAttempt) {
     loginAttemptArr.push(letter);
   }
-
+  if (loginAttemptArr.length < highest) {
+    highest = loginAttemptArr.length;
+  }
+  let k = highest;
   let resultsArr = [];
   function a() {
     let str = "";
-    for (let i = 0; i < smallest; i++) {
+    for (let i = 0; i < k; i++) {
       str = str + loginAttemptArr[i];
     }
 
@@ -49,7 +51,7 @@ function passwordCracker(passwords, loginAttempt) {
       if (index == true) {
         resultsArr.push(str);
         loginAttemptArr.splice(0, k);
-        k = smallest;
+        k = highest;
 
         if (loginAttemptArr.length > 0) {
           if (loginAttemptArr.length < smallest) {
@@ -61,19 +63,21 @@ function passwordCracker(passwords, loginAttempt) {
         }
 
         if (loginAttemptArr.length >= smallest) {
+          if (loginAttemptArr.length >= highest) {
+            k = highest;
+          } else {
+            k = loginAttemptArr.length;
+          }
           return a();
         }
       } else if (index == false) {
-        if (loginAttemptArr[k] !== undefined) {
-          if (k < highest) {
-            str = str + loginAttemptArr[k];
-            k = k + 1;
-            return b(str);
-          } else if (k >= highest) {
-            return false;
-          }
-        } else {
+        str = str.slice(0, -1);
+        console.log(str);
+        k = k - 1;
+        if (str.length < smallest) {
           return false;
+        } else {
+          return b(str);
         }
       }
     }
@@ -94,8 +98,5 @@ function passwordCracker(passwords, loginAttempt) {
   }
 }
 console.log(
-  passwordCracker(
-    ["because", "can", "do", "must", "we", "what"],
-    "wedowhatwemustbecausewecan"
-  )
+  passwordCracker(["we", "web", "adaman", "arcod"], "webarcodwebadamanweb")
 );
